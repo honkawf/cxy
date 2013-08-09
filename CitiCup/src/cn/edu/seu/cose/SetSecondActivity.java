@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+import cn.edu.seu.cose.R;
 import cn.edu.seu.cose.LockPatternView.Cell;
 import cn.edu.seu.cose.LockPatternView.DisplayMode;
 import cn.edu.seu.cose.LockPatternView.OnPatternListener;
-
-import com.wgs.jiesuo.R;
 
 public class SetSecondActivity extends Activity implements OnClickListener {
 

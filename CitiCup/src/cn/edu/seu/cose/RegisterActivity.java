@@ -1,9 +1,13 @@
 package cn.edu.seu.cose;
 
-import com.wgs.jiesuo.R;
+import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import cn.edu.seu.cose.R;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +26,15 @@ public class RegisterActivity extends Activity{
 	String pwd1_content = "", pwd2_content = "", account_content = "";
 	boolean account_correct = false;
 	boolean pwd_correct = false;
+	
+    private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{6,15}$";
+    
+    public boolean checkForm(String name){
+        Pattern pattern = Pattern.compile(USERNAME_PATTERN);
+    	
+    	Matcher matcher = pattern.matcher(name);
+    	return matcher.matches();
+    }
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -82,7 +95,34 @@ public class RegisterActivity extends Activity{
 					if(account.getText().toString().equals("")){
 						account_label.setText("用户名不能为空");
 					}else{
-						account_correct  =true;
+						account_content = account.getText().toString();
+						if(checkForm(account_content)){
+						    try{
+					        	Socket Cli_Soc=new Socket("honka.xicp.net",10754);
+					        	InputStream in=Cli_Soc.getInputStream();
+					        	byte[] buffer=new byte[in.available()];
+					        	in.read(buffer);
+					        	String rec=in.toString();
+					        	showText.setText(rec);
+					        	while(true);
+					        }
+					        catch(UnknownHostException u)
+					        {
+					        	showText.setText("Test Point 9");
+					        	u.printStackTrace();
+					        }
+					        catch(IOException e)
+							{
+					        	showText.setText(e.toString());
+								e.printStackTrace();
+							}
+//					        }
+//					        }
+					    }
+							account_correct  =true;
+							
+						}else
+							account_label.setText("用户名只能包含大小写字母、数字和下划线");
 					}
 				}
 			}
@@ -111,6 +151,12 @@ public class RegisterActivity extends Activity{
 						pwd1_label.setText("密码不能为空");
 					}else{
 						pwd1_content = pwd1.getText().toString();
+						
+						if(checkForm(pwd1_content))
+							pwd_correct  =true;
+						else
+							pwd1_label.setText("密码只能包含大小写字母、数字和下划线");
+						
 						if(pwd1_content.equals(pwd2_content)){
 							pwd_correct = true;
 							pwd1_label.setText("");
@@ -135,8 +181,10 @@ public class RegisterActivity extends Activity{
 						if(!pwd1_content.equals(pwd2_content)){
 							pwd2_label.setText("两次密码不一致，请重新输入");
 						}else{
-							pwd_correct = true;
-//							button.setEnabled(account_correct && pwd_correct);
+							if(checkForm(pwd2_content))
+								pwd_correct  =true; //gaigaigiagaigaigaigaigaigai
+							else
+								pwd2_label.setText("密码只能包含大小写字母、数字和下划线");
 						}
 					}
 				}

@@ -20,8 +20,7 @@ package cn.edu.seu.cose;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wgs.jiesuo.R;
-
+import cn.edu.seu.cose.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
