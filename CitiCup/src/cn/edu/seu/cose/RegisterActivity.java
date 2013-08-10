@@ -1,5 +1,9 @@
 package cn.edu.seu.cose;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -97,28 +101,25 @@ public class RegisterActivity extends Activity{
 					}else{
 						account_content = account.getText().toString();
 						if(checkForm(account_content)){
-						    try{
-					        	Socket Cli_Soc=new Socket("honka.xicp.net",10754);
-					        	InputStream in=Cli_Soc.getInputStream();
-					        	byte[] buffer=new byte[in.available()];
-					        	in.read(buffer);
-					        	String rec=in.toString();
-					        	showText.setText(rec);
-					        	while(true);
-					        }
-					        catch(UnknownHostException u)
-					        {
-					        	showText.setText("Test Point 9");
-					        	u.printStackTrace();
-					        }
-					        catch(IOException e)
-							{
-					        	showText.setText(e.toString());
+							String event = "checkAccount";
+							XML_Person xmlp = new XML_Person();
+							xmlp.addPersonAccount(account_content);
+							String resultXML = xmlp.producePersonXML(event);
+							pwd2_label.setText("ddd" + resultXML);
+							try {
+								pwd1_label.setText("fdsf");
+								Socket Cli_Soc = new Socket("honka.xicp.net",30145);
+								OutputStream out = Cli_Soc.getOutputStream();
+								out.write(resultXML.getBytes());
+								Cli_Soc.close();
+							} catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-//					        }
-//					        }
-					    }
+							
 							account_correct  =true;
 							
 						}else
