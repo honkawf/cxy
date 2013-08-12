@@ -43,7 +43,7 @@ public class SetSecondActivity extends Activity implements OnClickListener {
 				
 				if( first_pattern.equals(LockPatternUtils.patternToString(pattern))){
 					lockPatternUtils.saveLockPattern(pattern);
-					Toast.makeText(SetSecondActivity.this, "ÃÜÂëÒÑ¾­ÉèÖÃ", Toast.LENGTH_LONG)
+					Toast.makeText(SetSecondActivity.this, "å¯†ç å·²ç»è®¾ç½®", Toast.LENGTH_LONG)
 					.show();
 					lockPatternView.clearPattern();
 					Intent intentToCheck = new Intent();
@@ -51,7 +51,7 @@ public class SetSecondActivity extends Activity implements OnClickListener {
 		            startActivity(intentToCheck);
 		            SetSecondActivity.this.finish();
 				} else{
-					Toast.makeText(SetSecondActivity.this, "ÊäÈë²»Ò»ÖÂ£¬ÇëÖØĞÂÊäÈë", Toast.LENGTH_LONG)
+					Toast.makeText(SetSecondActivity.this, "è¾“å…¥ä¸ä¸€è‡´ï¼Œè¯·é‡æ–°è¾“å…¥", Toast.LENGTH_LONG)
 					.show();
 					Intent intentToFirst = new Intent();
 					intentToFirst.setClass(SetSecondActivity.this, SetFirstActivity.class);
