@@ -11,8 +11,6 @@
         android:text="注册"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-
-
     <TextView
         android:id="@+id/txt1"
         android:layout_width="wrap_content"
@@ -20,21 +18,36 @@
         android:text="请输入用户名"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/account"
-        android:layout_width="252dp"
-        android:layout_height="wrap_content"
-        android:ems="10" >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="73dp"
+        android:orientation="vertical" >
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:ems="10" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_Account"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="23dp"
+            android:layout_toRightOf="@+id/account"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/account_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" "
-        android:textColor="#FF0000"  />
+        android:textColor="#FF0000" />
 
     <TextView
         android:id="@+id/txt2"
@@ -76,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" "
-        android:textColor="#FF0000"  />
+        android:textColor="#FF0000" />
 
     <TextView
         android:id="@+id/textView1"
@@ -96,8 +109,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceSmall" 
-        android:textColor="#FF0000"/>
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FF0000" />
 
     <Button
         android:id="@+id/submit"
