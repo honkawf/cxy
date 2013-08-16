@@ -103,6 +103,7 @@ public class RegisterActivity extends Activity {
 		}
 		byte[] tmp = new byte[16 - counter];
 		System.arraycopy(buffer, counter, tmp, 0, 16 - counter);
+		
 		total = Integer.parseInt(new String(tmp));
 		return total;
 
@@ -157,9 +158,12 @@ public class RegisterActivity extends Activity {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
 					account_label.setText("");
+					
+					
 				} else {
 					if (account.getText().toString().equals("")) {
 						account_label.setText("用户名不能为空");
+						account_correct = false;
 					} else {
 						account_content = account.getText().toString();
 						if (checkForm(account_content)) {
@@ -309,19 +313,25 @@ public class RegisterActivity extends Activity {
 			public void onClick(View arg0) {
 				button.setFocusable(true);
 				button.setFocusableInTouchMode(true);
-				if (realName.getText().toString().equals("")) {
+				
+				realName_content = realName.getText().toString();
+				if (realName_content.equals("")) {
 					realName_label.setText("真实姓名不能为空");
 				} else {
-					realName_content = realName.getText().toString();
+					
 					if (checkForm(realName_content)) {
+						realName_label.setText("");
+						
 						if (account_correct && pwd_correct) {
 							Log.i("point","1");
 							bluetoothMac = BluetoothOperation.getLocalMac().replaceAll(":","");
+							Log.i("point",bluetoothMac);
+//							replaceAll(":","");
+							PersonInfo.localPersonInfo.setUserName(account_content);
+							
 							new Thread() {
 								public void run() {
 									try {
-										Log.i("point","1");
-			//							String bluetoothMac = BluetoothOperation.getLocalMac().replaceAll(":","");
 										Log.i("point","12");
 										String event = "register";
 										Log.i("point","13");

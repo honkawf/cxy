@@ -6,6 +6,7 @@ import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,6 +25,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private LockPatternUtils lockPatternUtils;
 
 	private Button btn_set_pwd;
+	private Button btn_link_test;
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 		lockPatternView = (LockPatternView) findViewById(R.id.lpv_lock);
 		btn_set_pwd = (Button) findViewById(R.id.btn_set_pwd);
+		btn_link_test = (Button) findViewById(R.id.btn_link_test);
 		btn_set_pwd.setOnClickListener(this);
+		btn_link_test.setOnClickListener(this);
 
 		lockPatternUtils = new LockPatternUtils(this);
 		lockPatternView.setOnPatternListener(new OnPatternListener() {
@@ -49,16 +53,16 @@ public class MainActivity extends Activity implements OnClickListener {
 				if (result != 1) {
 					if (result == 0) {
 						lockPatternView.setDisplayMode(DisplayMode.Wrong);
-						Toast.makeText(MainActivity.this, "ÃÜÂë´íÎó",
+						Toast.makeText(MainActivity.this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
 								Toast.LENGTH_LONG).show();
 					} else {
 						lockPatternView.clearPattern();
-						Toast.makeText(MainActivity.this, "ÇëÉèÖÃÃÜÂë",
+						Toast.makeText(MainActivity.this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
 								Toast.LENGTH_LONG).show();
 					}
 
 				} else {
-					Toast.makeText(MainActivity.this, "ÃÜÂëÕýÈ·", Toast.LENGTH_LONG)
+					Toast.makeText(MainActivity.this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·", Toast.LENGTH_LONG)
 							.show();
 				}
 
@@ -83,10 +87,19 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		}
 */
-		Intent intent = new Intent();
-		intent.setClass(MainActivity.this, RegisterActivity.class);
-		startActivity(intent);
-		MainActivity.this.finish();
+		if(v == btn_set_pwd){
+			Intent intent = new Intent();
+			intent.setClass(MainActivity.this, RegisterActivity.class);
+			startActivity(intent);
+			MainActivity.this.finish();
+		}
+		
+		if(v == btn_link_test){
+			Intent intent = new Intent();
+			intent.setClass(MainActivity.this, LinkBankCardActivity.class);
+			startActivity(intent);
+			MainActivity.this.finish();
+		}
 	}
 
 }
