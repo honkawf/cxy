@@ -62,7 +62,7 @@ public class RegisterActivity extends Activity {
 			case 2:
 				pd.dismiss();
 				Intent intent = new Intent();
-				intent.setClass(RegisterActivity.this, MainActivity.class);
+				intent.setClass(RegisterActivity.this, SetFirstActivity.class);
 				startActivity(intent);
 				RegisterActivity.this.finish();
 				break;

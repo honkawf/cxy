@@ -6,6 +6,7 @@ import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,16 +43,23 @@ public class SetSecondActivity extends Activity implements OnClickListener {
 			public void onPatternDetected(List<Cell> pattern) {
 				
 				if( first_pattern.equals(LockPatternUtils.patternToString(pattern))){
+					Log.i("local", "1");
 					lockPatternUtils.saveLockPattern(pattern);
-					Toast.makeText(SetSecondActivity.this, "瀵嗙爜宸茬粡璁剧疆", Toast.LENGTH_LONG)
-					.show();
+					Log.i("local", "12");
+//					Toast.makeText(SetSecondActivity.this, "密码设置成功", Toast.LENGTH_LONG)
+//					.show();
 					lockPatternView.clearPattern();
+					Log.i("local", "13");
+					
 					Intent intentToCheck = new Intent();
-					intentToCheck.setClass(SetSecondActivity.this, MainActivity.class);
-		            startActivity(intentToCheck);
-		            SetSecondActivity.this.finish();
+					Log.i("local", "14");
+					intentToCheck.setClass(SetSecondActivity.this, LinkBankCardActivity.class);
+					Log.i("local", "15");
+					startActivity(intentToCheck);
+					Log.i("local", "16");
+					SetSecondActivity.this.finish();
 				} else{
-					Toast.makeText(SetSecondActivity.this, "杈撳叆涓嶄竴鑷达紝璇烽噸鏂拌緭鍏", Toast.LENGTH_LONG)
+					Toast.makeText(SetSecondActivity.this, "两次密码不一致", Toast.LENGTH_LONG)
 					.show();
 					Intent intentToFirst = new Intent();
 					intentToFirst.setClass(SetSecondActivity.this, SetFirstActivity.class);

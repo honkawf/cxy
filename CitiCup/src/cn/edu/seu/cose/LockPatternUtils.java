@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.edu.seu.cose.encrypt.Local;
+import cn.edu.seu.cose.encrypt.LocalIO;
+
 import cn.edu.seu.cose.LockPatternView.Cell;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 
 public class LockPatternUtils {
 	
@@ -65,13 +72,27 @@ public class LockPatternUtils {
     }
     
     public void saveLockPattern(List<LockPatternView.Cell> pattern){
-    	Editor editor = preference.edit();
+    	/*Editor editor = preference.edit();
     	editor.putString(KEY_LOCK_PWD, patternToString(pattern));
-    	editor.commit();
+    	editor.commit();*/
+    	LocalIO lio = new LocalIO("sdcard/data" , "local.dat");
+    	Log.i("set", "1");
+    	Local x = lio.readfile();
+    	Log.i("set", "12");
+    	lio.reviseg(patternToString(pattern));
+    	Log.i("set", "13");
     }
     
     public String getLockPaternString(){
-    	return preference.getString(KEY_LOCK_PWD, "");
+    	//return preference.getString(KEY_LOCK_PWD, "");
+    	LocalIO lio = new LocalIO("sdcard/data" , "local.dat");
+    	Log.i("get", "1");
+    	Local x = lio.readfile();
+    	Log.i("get", "2");
+    	String ggg = x.getg();
+    	Log.i("get", x.getg());
+    	Log.i("get", "3");
+    	return x.getg();
     }
     
     public int checkPattern(List<LockPatternView.Cell> pattern) {
@@ -86,6 +107,4 @@ public class LockPatternUtils {
     public void clearLock() {
     	saveLockPattern(null);
     }
-  
-
 }
