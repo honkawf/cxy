@@ -1,5 +1,6 @@
 package cn.edu.seu.cose;
 
+import java.io.File;
 import java.util.List;
 
 import android.R.integer;
@@ -45,23 +46,33 @@ public class VarifyPatternPasswordActivity extends Activity implements OnClickLi
 			}
 
 			public void onPatternDetected(List<Cell> pattern) {
-				int result = lockPatternUtils.checkPattern(pattern);
-				Toast.makeText(VarifyPatternPasswordActivity.this,
-						LockPatternUtils.patternToString(pattern),
-						Toast.LENGTH_LONG).show();
+				File file = new File("sdcard/data", "local.dat");
+				if (!file.exists()) {
+					Toast.makeText(VarifyPatternPasswordActivity.this, "请下载密码文件",
+							Toast.LENGTH_LONG).show();
+					Intent intent = new Intent();
+					intent.setClass(VarifyPatternPasswordActivity.this,
+							RegisterActivity.class);
+					startActivity(intent);
+				} else {
+					int result = lockPatternUtils.checkPattern(pattern);
+					Toast.makeText(VarifyPatternPasswordActivity.this,
+							LockPatternUtils.patternToString(pattern),
+							Toast.LENGTH_LONG).show();
 
-				if (result != 1) {
-					if (result == 0) {
-						lockPatternView.setDisplayMode(DisplayMode.Wrong);
-						Toast.makeText(VarifyPatternPasswordActivity.this, "密码错误",
-								Toast.LENGTH_LONG).show();
+					if (result != 1) {
+						if (result == 0) {
+							lockPatternView.setDisplayMode(DisplayMode.Wrong);
+								Toast.makeText(VarifyPatternPasswordActivity.this, "密码错误",
+										Toast.LENGTH_LONG).show();
 						//wrong
-					} else {
+						} else {
 						lockPatternView.clearPattern();
 						Toast.makeText(VarifyPatternPasswordActivity.this, "密码为空",
 								Toast.LENGTH_LONG).show();
 						//empty
-					}
+						}
+					
 
 				} else {
 					Toast.makeText(VarifyPatternPasswordActivity.this, "密码正确", Toast.LENGTH_LONG)
@@ -73,6 +84,7 @@ public class VarifyPatternPasswordActivity extends Activity implements OnClickLi
 					VarifyPatternPasswordActivity.this.finish();
 				}
 
+			}
 			}
 
 			public void onPatternCleared() {

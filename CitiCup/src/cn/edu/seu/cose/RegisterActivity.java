@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,18 +28,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class RegisterActivity extends Activity {
 
 	private EditText account, pwd1, pwd2, realName;
-	private TextView pwd1_label, pwd2_label, account_label, realName_label,
-			button_label;
+	private TextView pwd1_label, pwd2_label, account_label, realName_label, button_label;
 	private Button button;
-	String pwd1_content = "", pwd2_content = "", account_content = "",
-			realName_content = "";
-	boolean account_correct = false;
-	boolean pwd_correct = false;
+	private String pwd1_content = "", pwd2_content = "", account_content = "", realName_content = "";
+	private boolean account_correct = false;
+	private boolean pwd_correct = false;
 	private Socket Cli_Soc = null;
 	private ProgressDialog pd;
 	private String bluetoothMac;
