@@ -1,4 +1,4 @@
-package cn.edu.seu.cose;
+package cn.edu.seu.cose.register;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -6,10 +6,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.edu.seu.cose.encrypt.MD5T;
+import cn.edu.seu.cose.R;
+import cn.edu.seu.cose.encrypt.LocalInfo;
+import cn.edu.seu.cose.encrypt.LocalInfoIO;
+import cn.edu.seu.cose.property.ProperityInfo;
+import cn.edu.seu.cose.share.IDataTransportation;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,42 +28,132 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class LinkBankCardActivity extends Activity{
+@SuppressLint("HandlerLeak")
+public class LinkBankCardActivity extends Activity implements IDataTransportation{
 	private EditText cardNum, cardPwd, phoneNum, idCardNum;
 	private TextView cardNum_label, cardPwd_label, phoneNum_label, idCardNum_label, btn_link_label;
 	private Button btn_link_submit;
-	private Socket Cli_Soc = null;
-	private ProgressDialog pd;
+	private Socket cli_Soc = null;
+	private ProgressDialog linkBankCard_pd;
 	private String cardNum_content = "", cardPwd_content = "", phoneNum_content = "", idCardNum_content= "";
 	private boolean cardNum_correct = false, cardPwd_correct = false, phoneNum_correct = false, idCardNum_correct = false;
+	private String first_pattern;
+	private String userName;
+	private String password;
+	private String customerName;
+	
+	private static final String CARDNUM_PATTERN = "^[0-9]{19,19}$";
+	private static final String CARDPWD_PATTERN = "^[0-9]{6,6}$";
+	private static final String PHONENUM_PATTERN = "^[0-9]{11,11}$";
+	private static final String IDCARDNUM_PATTERN = "^[0-9]{18,18}$";
 
+	public Object connect(String address, int port){
+		Socket socket = null;
+		try{
+			socket = new Socket(address, port);	
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return socket;
+	}
+	
+	public boolean write(String xml){
+		try{
+			OutputStream out = cli_Soc.getOutputStream();
+			out.write(plusHead(xml.length()));
+			out.write(xml.getBytes());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public byte[] read(){
+		byte[] info = null;
+		try{
+			byte[] buffer = new byte[16];
+			InputStream in = cli_Soc.getInputStream();
+			in.read(buffer);
+			int XML_length = readHead(buffer);
+			info = new byte[XML_length];
+			in.read(info);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return info;
+	}
+	
+	public boolean close(){
+		try{
+			cli_Soc.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
 	private Handler handler = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:
-				pd.dismiss();
+				LocalInfoIO lio = new LocalInfoIO("sdcard/data" , "local.dat");
+		    	LocalInfo li = new LocalInfo();
+		    	li.setAvailableBalance("0");
+		    	Log.i("linkBankCard", "0");
+		    	li.setBalance("0");
+		    	Log.i("linkBankCard", "0");
+		    	li.setCardnum(cardNum_content);
+		    	Log.i("linkBankCard", cardNum_content);
+		    	li.setGesturePwd(first_pattern);
+		    	Log.i("linkBankCard", first_pattern);
+		    	li.setPassword(password);
+		    	Log.i("linkBankCard", password);
+		    	li.setPrivateKey("0");
+		    	Log.i("linkBankCard", "0");
+		    	li.setPublicKeyn("0");
+		    	Log.i("linkBankCard", "0");
+		    	li.setUserName(userName);
+		    	Log.i("linkBankCard", userName);
+		    	lio.writefile(li);
+				
+				linkBankCard_pd.dismiss();
 				Intent intent = new Intent();
 				intent.setClass(LinkBankCardActivity.this, VarifyPatternPasswordActivity.class);
 				startActivity(intent);
 				LinkBankCardActivity.this.finish();
 				break;
 			case 1:
-				pd.dismiss();
+				linkBankCard_pd.dismiss();
 				btn_link_label.setText("绑定失败，请重新绑定");
 			}
 			super.handleMessage(msg);
 		}
 	};
 	
-	private static final String CARDNUM_PATTERN = "^[0-9]{19,19}$";
-	private static final String CARDPWD_PATTERN = "^[0-9]{6,6}$";
-	private static final String PHONENUM_PATTERN = "^[0-9]{11,11}$";
-	private static final String IDCARDNUM_PATTERN = "^[0-9]{18,18}$";
+
 
 	public boolean checkForm(String name, String re) {
 		Pattern pattern = Pattern.compile(re);
@@ -99,13 +195,17 @@ public class LinkBankCardActivity extends Activity{
 		phoneNum = (EditText) findViewById(R.id.phoneNum);
 		idCardNum = (EditText) findViewById(R.id.idCardNum);
 		btn_link_submit = (Button) findViewById(R.id.btn_link_submit);
-//		pb = (ProgressBar) findViewById(R.id.progressBar_Account);
 
 		cardNum_label = (TextView) findViewById(R.id.cardNum_label);
 		cardPwd_label = (TextView) findViewById(R.id.cardPwd_label);
 		phoneNum_label = (TextView) findViewById(R.id.phoneNum_label);
 		idCardNum_label = (TextView) findViewById(R.id.idCardNum_label);
 		btn_link_label = (TextView) findViewById(R.id.btn_link_label);
+		
+		Intent intent = getIntent();
+		first_pattern = intent.getStringExtra("firstPattern");
+		userName = intent.getStringExtra("userName");
+		password = intent.getStringExtra("password");
 		
 		cardNum.setOnFocusChangeListener(new OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -119,7 +219,8 @@ public class LinkBankCardActivity extends Activity{
 					else{
 						if(checkForm(cardNum_content,CARDNUM_PATTERN)){
 							cardNum_correct = true;
-							cardNum_label.setText(cardNum_content);
+//							cardNum_label.setText(cardNum_content);
+							cardNum_label.setText(first_pattern);
 							}
 						else
 							cardNum_label.setText("银行卡卡号格式不正确");
@@ -141,7 +242,8 @@ public class LinkBankCardActivity extends Activity{
 					else{
 						if(checkForm(cardPwd_content,CARDPWD_PATTERN)){
 							cardPwd_correct = true;
-							cardPwd_label.setText(cardPwd_content);
+//							cardPwd_label.setText(cardPwd_content);
+							cardPwd_label.setText(userName);
 						}
 						else
 							cardPwd_label.setText("银行卡密码格式不正确");
@@ -162,7 +264,8 @@ public class LinkBankCardActivity extends Activity{
 					else{
 						if(checkForm(phoneNum_content,PHONENUM_PATTERN)){
 							phoneNum_correct = true;
-							phoneNum_label.setText(phoneNum_content);
+//							phoneNum_label.setText(phoneNum_content);
+							phoneNum_label.setText(password);
 						}
 						else
 							phoneNum_label.setText("手机号码格式不正确");
@@ -183,7 +286,8 @@ public class LinkBankCardActivity extends Activity{
 					else{
 						if(checkForm(idCardNum_content,IDCARDNUM_PATTERN)){
 							idCardNum_correct = true;
-							idCardNum_label.setText(idCardNum_content);
+//							idCardNum_label.setText(idCardNum_content);
+							idCardNum_label.setText(customerName);
 						}
 						else
 							idCardNum_label.setText("身份证号码格式不正确");
@@ -207,35 +311,22 @@ public class LinkBankCardActivity extends Activity{
 								
 								new Thread() {
 									public void run() {
-										try {
+										Log.i("button","1");
+/*										try {
 											String localUserName  =PersonInfo.localPersonInfo.getUserName();
 											String event = "linkBankCard";
-											Log.i("link","1");
 											XML_Person xmlp = new XML_Person();
-											
 											xmlp.addPersonLinkBankCard(localUserName, cardNum_content,  phoneNum_content, idCardNum_content);
-											
 											String resultXML = xmlp.produceLinkBankCardXML(event);
-											
-											Cli_Soc = new Socket("honka.xicp.net", 30145);
-											
-											OutputStream out = Cli_Soc.getOutputStream();
-											
+											cli_Soc = new Socket("honka.xicp.net", 30145);
+											OutputStream out = cli_Soc.getOutputStream();
 											out.write(plusHead(resultXML.length()));
-											
 											out.write(resultXML.getBytes());
 											
-											
-											
-											
 											byte[] buffer = new byte[16];
-											
-											InputStream in = Cli_Soc.getInputStream();
-											
+											InputStream in = cli_Soc.getInputStream();
 											in.read(buffer);
-											
 											int XML_length = readHead(buffer);
-											
 											byte[] info = new byte[XML_length];
 											in.read(info);
 											String checkResult = new String(info);
@@ -250,7 +341,7 @@ public class LinkBankCardActivity extends Activity{
 												Log.i("chris", "绑定失败");
 												handler.sendEmptyMessage(1);
 											}
-											Cli_Soc.close();
+											cli_Soc.close();
 										} catch (UnknownHostException e) {
 											// TODO Auto-generated catch block
 											e.printStackTrace();
@@ -258,12 +349,49 @@ public class LinkBankCardActivity extends Activity{
 											// TODO Auto-generated catch block
 											e.printStackTrace();
 										}
+*/										
+										
+
+										Log.i("button","12");
+										String event = "linkBankCard";
+										Log.i("button","13");
+										XML_Person xmlp = new XML_Person();
+										Log.i("button","14");
+										xmlp.addPersonLinkBankCard(userName, cardNum_content,  phoneNum_content, idCardNum_content);
+										Log.i("button","15");
+										String resultXML = xmlp.produceLinkBankCardXML(event);
+										Log.i("button","16");
+										
+										Properties config =ProperityInfo.getProperties();
+										Log.i("button","17");
+										String serverAddress=config.getProperty("serverAddress");
+										Log.i("button","18");
+										String serverPort=config.getProperty("serverPort" );
+										Log.i("button","19");
+										cli_Soc = (Socket)connect(serverAddress, Integer.parseInt(serverPort));
+										Log.i("button","111");
+										write(resultXML);
+										Log.i("button","112");
+										byte[] info = read();
+										Log.i("button","113");
+										String checkResult = new String(info);
+										Log.i("button","114");
+										checkResult = XML_Person.parseSentenceXML(new ByteArrayInputStream(info));
+										Log.i("button","115");
+										if (checkResult.equals("绑定成功")) {
+											Log.i("chris", "注册成功");
+											handler.sendEmptyMessage(0);
+										} else {
+											Log.i("chris", "绑定失败");
+											handler.sendEmptyMessage(1);
+										}
+										close();
 									}
 								}.start();
 								
-								pd = ProgressDialog.show(LinkBankCardActivity.this,"注册", "注册中，请稍后……");
-								pd.setCancelable(true);// 设置进度条是否可以按退回键取消
-								pd.setCanceledOnTouchOutside(false);
+								linkBankCard_pd = ProgressDialog.show(LinkBankCardActivity.this,"注册", "注册中，请稍后……");
+								linkBankCard_pd.setCancelable(true);// 设置进度条是否可以按退回键取消
+								linkBankCard_pd.setCanceledOnTouchOutside(false);
 								
 							}else{
 								cardNum_label.setText("银行卡密码格式不正确");
@@ -277,8 +405,6 @@ public class LinkBankCardActivity extends Activity{
 				}else{
 					idCardNum_label.setText("身份证号码格式不正确");
 				}
-				
-								
 			}
 		});
 		

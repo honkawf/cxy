@@ -1,14 +1,12 @@
-package cn.edu.seu.cose;
+package cn.edu.seu.cose.register;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.edu.seu.cose.encrypt.Local;
-import cn.edu.seu.cose.encrypt.LocalIO;
-
-import cn.edu.seu.cose.LockPatternView.Cell;
-
+import cn.edu.seu.cose.encrypt.LocalInfo;
+import cn.edu.seu.cose.encrypt.LocalInfoIO;
+import cn.edu.seu.cose.register.LockPatternView.Cell;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -75,24 +73,31 @@ public class LockPatternUtils {
     	/*Editor editor = preference.edit();
     	editor.putString(KEY_LOCK_PWD, patternToString(pattern));
     	editor.commit();*/
-    	LocalIO lio = new LocalIO("sdcard/data" , "local.dat");
-    	Log.i("set", "1");
-    	Local x = lio.readfile();
-    	Log.i("set", "12");
-    	lio.reviseg(patternToString(pattern));
+    	LocalInfoIO lio = new LocalInfoIO("sdcard/data" , "local.dat");
+    	LocalInfo li = new LocalInfo();
+    	li.setAvailableBalance("0");
+    	li.setBalance("0");
+    	li.setCardnum("0");
+    	li.setGesturePwd(patternToString(pattern));
+    	li.setPassword("0");
+    	li.setPrivateKey("0");
+    	li.setPublicKeyn("0");
+    	li.setUserName("0");
+    	lio.writefile(li);
+//    	lio.modifyGesturePwd(patternToString(pattern));
     	Log.i("set", "13");
     }
     
     public String getLockPaternString(){
     	//return preference.getString(KEY_LOCK_PWD, "");
-    	LocalIO lio = new LocalIO("sdcard/data" , "local.dat");
+    	LocalInfoIO lio = new LocalInfoIO("sdcard/data" , "local.dat");
     	Log.i("get", "1");
-    	Local x = lio.readfile();
+    	LocalInfo x = lio.readfile();
     	Log.i("get", "2");
-    	String ggg = x.getg();
-    	Log.i("get", x.getg());
+    	String ggg = x.getGesturePwd();
+    	Log.i("get", x.getGesturePwd());
     	Log.i("get", "3");
-    	return x.getg();
+    	return x.getGesturePwd();
     }
     
     public int checkPattern(List<LockPatternView.Cell> pattern) {

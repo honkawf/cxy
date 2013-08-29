@@ -1,4 +1,4 @@
-package cn.edu.seu.cose;
+package cn.edu.seu.cose.register;
 
 import java.io.File;
 import java.util.List;
@@ -13,9 +13,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import cn.edu.seu.cose.R;
-import cn.edu.seu.cose.LockPatternView.Cell;
-import cn.edu.seu.cose.LockPatternView.DisplayMode;
-import cn.edu.seu.cose.LockPatternView.OnPatternListener;
+import cn.edu.seu.cose.encrypt.LocalInfo;
+import cn.edu.seu.cose.encrypt.LocalInfoIO;
+import cn.edu.seu.cose.register.LockPatternView.Cell;
+import cn.edu.seu.cose.register.LockPatternView.DisplayMode;
+import cn.edu.seu.cose.register.LockPatternView.OnPatternListener;
 
 public class SetSecondActivity extends Activity implements OnClickListener {
 
@@ -24,6 +26,7 @@ public class SetSecondActivity extends Activity implements OnClickListener {
 	private LockPatternView lockPatternView;
 
 	private LockPatternUtils lockPatternUtils;
+	private String first_pattern,userName,password;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,7 +34,9 @@ public class SetSecondActivity extends Activity implements OnClickListener {
 		lockPatternView = (LockPatternView) findViewById(R.id.lpv_lock_second);
 
 		Intent intent = getIntent();
-		final String first_pattern = intent.getStringExtra("firstPattern");
+		first_pattern = intent.getStringExtra("firstPattern");
+		userName = intent.getStringExtra("userName");
+		password = intent.getStringExtra("password");
 
 		lockPatternUtils = new LockPatternUtils(this);
 		lockPatternView.setOnPatternListener(new OnPatternListener() {
@@ -44,33 +49,33 @@ public class SetSecondActivity extends Activity implements OnClickListener {
 
 				if (first_pattern.equals(LockPatternUtils
 						.patternToString(pattern))) {
-					File file = new File("sdcard/data", "local.dat");
-					if (!file.exists()) {
-						Toast.makeText(SetSecondActivity.this, "请下载密码文件",
-								Toast.LENGTH_LONG).show();
-						Intent intent = new Intent();
-						intent.setClass(SetSecondActivity.this,
-								RegisterActivity.class);
-						startActivity(intent);
-					} else {
-						Log.i("local", "1");
-						lockPatternUtils.saveLockPattern(pattern);
-						Log.i("local", "12");
-						// Toast.makeText(SetSecondActivity.this, "密码设置成功",
-						// Toast.LENGTH_LONG)
-						// .show();
-						lockPatternView.clearPattern();
-						Log.i("local", "13");
+					LocalInfoIO lio = new LocalInfoIO("sdcard/data",
+							"local.dat");
+					LocalInfo li = new LocalInfo();
+					li.setAvailableBalance("0");
+					li.setBalance("0");
+					li.setGesturePwd(first_pattern);
+					li.setPassword(password);
+					li.setPrivateKey("0");
+					li.setPublicKeyn("0");
+					li.setUserName(userName);
+					li.setCardnum("0");
+					lio.writefile(li);
 
-						Intent intentToCheck = new Intent();
-						Log.i("local", "14");
-						intentToCheck.setClass(SetSecondActivity.this,
-								LinkBankCardActivity.class);
-						Log.i("local", "15");
-						startActivity(intentToCheck);
-						Log.i("local", "16");
-						SetSecondActivity.this.finish();
-					}
+					// lockPatternUtils.saveLockPattern(pattern);
+					lockPatternView.clearPattern();
+
+					Intent intentToCheck = new Intent();
+					intentToCheck.setClass(SetSecondActivity.this,
+							LinkBankCardActivity.class);
+					intentToCheck.putExtra("firstPattern", first_pattern);
+					intentToCheck.putExtra("userName", userName);
+					Log.i("second", userName);
+					intentToCheck.putExtra("password", password);
+					Log.i("second", password);
+					startActivity(intentToCheck);
+					SetSecondActivity.this.finish();
+
 				} else {
 					Toast.makeText(SetSecondActivity.this, "两次密码不一致",
 							Toast.LENGTH_LONG).show();

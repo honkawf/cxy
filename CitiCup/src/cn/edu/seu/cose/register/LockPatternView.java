@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.edu.seu.cose;
+package cn.edu.seu.cose.register;
 
 
 import java.util.ArrayList;

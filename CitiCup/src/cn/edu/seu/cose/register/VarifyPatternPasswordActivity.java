@@ -1,4 +1,4 @@
-package cn.edu.seu.cose;
+package cn.edu.seu.cose.register;
 
 import java.io.File;
 import java.util.List;
@@ -13,9 +13,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import cn.edu.seu.cose.R;
-import cn.edu.seu.cose.LockPatternView.Cell;
-import cn.edu.seu.cose.LockPatternView.DisplayMode;
-import cn.edu.seu.cose.LockPatternView.OnPatternListener;
+import cn.edu.seu.cose.register.LockPatternView.Cell;
+import cn.edu.seu.cose.register.LockPatternView.DisplayMode;
+import cn.edu.seu.cose.register.LockPatternView.OnPatternListener;
 
 public class VarifyPatternPasswordActivity extends Activity implements OnClickListener {
 
@@ -108,7 +108,8 @@ public class VarifyPatternPasswordActivity extends Activity implements OnClickLi
 */
 		if(v == btn_set_pwd){
 			Intent intent = new Intent();
-			intent.setClass(VarifyPatternPasswordActivity.this, SetFirstActivity.class);
+//			intent.setClass(VarifyPatternPasswordActivity.this, SetFirstActivity.class);
+			intent.setClass(VarifyPatternPasswordActivity.this, RegisterActivity.class);
 			startActivity(intent);
 			VarifyPatternPasswordActivity.this.finish();
 		}

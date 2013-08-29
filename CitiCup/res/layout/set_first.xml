@@ -12,7 +12,7 @@
         android:text="请设置密码"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <cn.edu.seu.cose.LockPatternView
+    <cn.edu.seu.cose.register.LockPatternView
          xmlns:app="http://schemas.android.com/apk/res/com.wgs.jiesuo"
          android:id="@+id/lpv_lock_first"
          android:background="#334455"

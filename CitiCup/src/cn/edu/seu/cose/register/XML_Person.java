@@ -1,4 +1,4 @@
-package cn.edu.seu.cose;
+package cn.edu.seu.cose.register;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,19 +27,29 @@ public class XML_Person {
 			    switch (i) {  
 	            case XmlPullParser.START_TAG:  
 	                if (xpp.getName().equals("userName"))
-	                	person.setUserName(xpp.nextText());
+	                	person.setUsername(xpp.nextText());
 	                else if (xpp.getName().equals("customerName")) 
-	                	person.setCustomerName(xpp.nextText());
+	                	person.setCustomername(xpp.nextText());
 	                else if (xpp.getName().equals("cardNum")) 
-	                	person.setCardNum(xpp.nextText());
+	                	person.setCardnum(xpp.nextText());
 	                else if(xpp.getName().equals("bluetoothMac"))
-	                	person.setBluetoothMac(xpp.nextText());
-	                else if(xpp.getName().equals("dynamicPasswordNum"))
-	                	person.setDynamicPasswordNum(xpp.nextText());
+	                	person.setBluetoothmac(xpp.nextText());
+	                else if(xpp.getName().equals("privateKey"))
+	                	person.setPrivatekey(xpp.nextText());
 	                else if(xpp.getName().equals("identificationCardNum"))
-	                	person.setIdentificationCardNum(xpp.nextText());
+	                	person.setIdentificationcardnum(xpp.nextText());
 	                else if(xpp.getName().equals("phoneNum"))
-	                	person.setPhoneNum(xpp.nextText());
+	                	person.setPhonenum(xpp.nextText());
+	                else if(xpp.getName().equals("publicKeyD"))
+	                	person.setPublickeyd(xpp.nextText());
+	                else if(xpp.getName().equals("publicKeyN"))
+	                	person.setPublickeyn(xpp.nextText());
+	                else if(xpp.getName().equals("IMEI"))
+	                	person.setImei(xpp.nextText());
+	                else if(xpp.getName().equals("password"))
+	                	person.setPassword(xpp.nextText());
+	                else if(xpp.getName().equals("balance"))
+	                	person.setBalance(xpp.nextText());
 	                break;
 	            }
 			}
@@ -122,15 +132,15 @@ public class XML_Person {
             xmlSerializer.attribute(null, "event", event);
                 xmlSerializer.startTag(null, "personInfo");  
                 xmlSerializer.startTag(null, "userName");  
-                xmlSerializer.text(person.getUserName());  
+                xmlSerializer.text(person.getUsername());  
                 xmlSerializer.endTag(null, "userName"); 
                 
                 xmlSerializer.startTag(null, "customerName");  
-                xmlSerializer.text(person.getCustomerName());  
+                xmlSerializer.text(person.getCustomername());  
                 xmlSerializer.endTag(null, "customerName");  
                   
                 xmlSerializer.startTag(null, "cardNum");  
-                xmlSerializer.text(person.getCardNum());  
+                xmlSerializer.text(person.getCardnum());  
                 xmlSerializer.endTag(null, "cardNum");  
                 
                 xmlSerializer.startTag(null, "password");  
@@ -138,19 +148,19 @@ public class XML_Person {
                 xmlSerializer.endTag(null, "password");  
                 
                 xmlSerializer.startTag(null, "bluetoothMac");  
-                xmlSerializer.text(person.getBluetoothMac());  
+                xmlSerializer.text(person.getBluetoothmac());  
                 xmlSerializer.endTag(null, "bluetoothMac"); 
                 
-                xmlSerializer.startTag(null, "dynamicPasswordNum");  
-                xmlSerializer.text(person.getDynamicPasswordNum());  
-                xmlSerializer.endTag(null, "dynamicPasswordNum"); 
+                xmlSerializer.startTag(null, "privateKey");  
+                xmlSerializer.text(person.getPrivatekey());  
+                xmlSerializer.endTag(null, "privateKey"); 
                 
                 xmlSerializer.startTag(null, "identificationCardNum");  
-                xmlSerializer.text(person.getIdentificationCardNum());  
+                xmlSerializer.text(person.getIdentificationcardnum());  
                 xmlSerializer.endTag(null, "identificationCardNum"); 
                 
                 xmlSerializer.startTag(null, "phoneNum");  
-                xmlSerializer.text(person.getPhoneNum());  
+                xmlSerializer.text(person.getPhonenum());  
                 xmlSerializer.endTag(null, "phoneNum"); 
                 
                 xmlSerializer.startTag(null, "balance");  
@@ -181,11 +191,11 @@ public class XML_Person {
             xmlSerializer.startTag(null, "personInfo");  
             
             xmlSerializer.startTag(null, "userName"); 
-            xmlSerializer.text(person.getUserName());  
+            xmlSerializer.text(person.getUsername());  
             xmlSerializer.endTag(null, "userName"); 
             
             xmlSerializer.startTag(null, "customerName");  
-            xmlSerializer.text(person.getCustomerName());  
+            xmlSerializer.text(person.getCustomername());  
             xmlSerializer.endTag(null, "customerName"); 
             
             xmlSerializer.startTag(null, "password");  
@@ -193,7 +203,7 @@ public class XML_Person {
             xmlSerializer.endTag(null, "password");  
             
             xmlSerializer.startTag(null, "bluetoothMac");  
-            xmlSerializer.text(person.getBluetoothMac());  
+            xmlSerializer.text(person.getBluetoothmac());  
             xmlSerializer.endTag(null, "bluetoothMac"); 
             
             xmlSerializer.endTag(null, "personInfo");
@@ -219,7 +229,7 @@ public class XML_Person {
             xmlSerializer.attribute(null, "event", event);
             xmlSerializer.startTag(null, "personInfo");  
             xmlSerializer.startTag(null, "userName");  
-            xmlSerializer.text(person.getUserName());  
+            xmlSerializer.text(person.getUsername());  
             xmlSerializer.endTag(null, "userName");  
             xmlSerializer.endTag(null, "personInfo");
             xmlSerializer.endTag(null, "information");
@@ -246,19 +256,19 @@ public class XML_Person {
             xmlSerializer.startTag(null, "personInfo");  
             
             xmlSerializer.startTag(null, "userName"); 
-            xmlSerializer.text(person.getUserName());  
+            xmlSerializer.text(person.getUsername());  
             xmlSerializer.endTag(null, "userName");
             
             xmlSerializer.startTag(null, "cardNum"); 
-            xmlSerializer.text(person.getCardNum());  
+            xmlSerializer.text(person.getCardnum());  
             xmlSerializer.endTag(null, "cardNum"); 
             
             xmlSerializer.startTag(null, "phoneNum");  
-            xmlSerializer.text(person.getPhoneNum());  
+            xmlSerializer.text(person.getPhonenum());  
             xmlSerializer.endTag(null, "phoneNum"); 
             
             xmlSerializer.startTag(null, "identificationCardNum");  
-            xmlSerializer.text(person.getIdentificationCardNum());  
+            xmlSerializer.text(person.getIdentificationcardnum());  
             xmlSerializer.endTag(null, "identificationCardNum");  
             
             xmlSerializer.endTag(null, "personInfo");
@@ -270,29 +280,33 @@ public class XML_Person {
         return stringWriter.toString();  
     }
 	
-    public void addPersonData(String userName, String customerName, String cardNum,String password,String bluetoothMac, 
-    	String dynamicPasswordNum, String identificationCardNum, String phoneNum, String balance){  
-        PersonInfo newPerson =new PersonInfo(userName, customerName, cardNum,password, bluetoothMac, dynamicPasswordNum, identificationCardNum, phoneNum,balance);
+    public void addPersonData(String username, String customername, String cardnum,
+			String bluetoothmac, String privatekey,
+			String identificationcardnum, String phonenum, String balance,
+			String password, String publickeyn, String publickeyd, String imei){  
+        PersonInfo newPerson =new PersonInfo(username, customername, cardnum, bluetoothmac,  
+        		privatekey, identificationcardnum, phonenum, balance, password, publickeyn, 
+        		publickeyd, imei);
         person=newPerson;
     } 
     
     public void addPersonUserName(String userName){
-    	person.setUserName(userName);
+    	person.setUsername(userName);
 
     }
     
     public void addPersonRegister(String userName, String password, String realName, String bluetoothMac){
-    	person.setUserName(userName);
+    	person.setUsername(userName);
     	person.setPassword(password);
-    	person.setCustomerName(realName);
-    	person.setBluetoothMac(bluetoothMac);
+    	person.setCustomername(realName);
+    	person.setBluetoothmac(bluetoothMac);
     }
     
     public void addPersonLinkBankCard(String userName, String cardNum, String phoneNum, String idCardNum){
-    	person.setUserName(userName);
-    	person.setCardNum(cardNum);
-    	person.setPhoneNum(phoneNum);
-    	person.setIdentificationCardNum(idCardNum);
+    	person.setUsername(userName);
+    	person.setCardnum(cardNum);
+    	person.setPhonenum(phoneNum);
+    	person.setIdentificationcardnum(idCardNum);
     }
     
     
