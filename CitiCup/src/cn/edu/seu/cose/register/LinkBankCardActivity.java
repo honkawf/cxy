@@ -29,6 +29,7 @@ import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cn.edu.seu.cose.share.DataDeal;
 
 @SuppressLint("HandlerLeak")
 public class LinkBankCardActivity extends Activity implements IDataTransportation{
@@ -66,7 +67,7 @@ public class LinkBankCardActivity extends Activity implements IDataTransportatio
 	public boolean write(String xml){
 		try{
 			OutputStream out = cli_Soc.getOutputStream();
-			out.write(plusHead(xml.length()));
+			out.write(DataDeal.plusHead(xml.length()));
 			out.write(xml.getBytes());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -86,7 +87,7 @@ public class LinkBankCardActivity extends Activity implements IDataTransportatio
 			byte[] buffer = new byte[16];
 			InputStream in = cli_Soc.getInputStream();
 			in.read(buffer);
-			int XML_length = readHead(buffer);
+			int XML_length = DataDeal.readHead(buffer);
 			info = new byte[XML_length];
 			in.read(info);
 		} catch (UnknownHostException e) {
@@ -160,30 +161,6 @@ public class LinkBankCardActivity extends Activity implements IDataTransportatio
 
 		Matcher matcher = pattern.matcher(name);
 		return matcher.matches();
-	}
-
-	private static byte[] plusHead(int length) {
-		String head = Integer.toString(length);
-		byte[] temp = head.getBytes();
-		byte[] send = new byte[16];
-		for (int i = 16 - temp.length, j = 0; j < temp.length; i++, j++) {
-			send[i] = temp[j];
-		}
-		return send;
-	}
-
-	private static int readHead(byte[] buffer) {
-		int total = 0;
-		int counter = 0;
-		for (counter = 0; counter < 16; counter++) {
-			if (buffer[counter] != '\0')
-				break;
-		}
-		byte[] tmp = new byte[16 - counter];
-		System.arraycopy(buffer, counter, tmp, 0, 16 - counter);
-		total = Integer.parseInt(new String(tmp));
-		return total;
-
 	}
 	
 	
